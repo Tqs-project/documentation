@@ -35,7 +35,7 @@ The team has 5 elements:
 The Backlog management tool we are using is PivotalTracker (link [here](https://www.pivotaltracker.com/n/projects/2500281)) using [Pivotal Workflow](https://www.pivotaltracker.com/help/articles/workflow_overview/), passing through all the stages ("Write stories", "Prioritize stories", "Estimate stories", "Start stories", "Finish and deliver stories", "Test stories", "Accept or reject stories" and "Stories move to the Done panel").
 
 ### API <a name="api"></a>
-[Swagger]()
+[Swagger](https://webmarket-314811.oa.r.appspot.com/swagger-ui/index.html?configUrl=%2Fapi-docs%2Fswagger-config#/)
 
 ### CI/CD <a name="ci_cd"></a>
 
