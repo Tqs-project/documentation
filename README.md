@@ -38,16 +38,29 @@ The Backlog management tool we are using is PivotalTracker (link [here](https://
 [Swagger](https://webmarket-314811.oa.r.appspot.com/swagger-ui/index.html?configUrl=%2Fapi-docs%2Fswagger-config#/)
 
 ### CI/CD <a name="ci_cd"></a>
+In order to continually test our deployments, each backend-related repositories for both WeDeliver and DrinkUp apps have CI/CD scripts executed on push.  
 
+*WeDeliver* Backend
+[CD](https://github.com/Tqs-project/We_Deliver-Backend/blob/dev/.github/workflows/build-cd.yaml)
+[CI](https://github.com/Tqs-project/We_Deliver-Backend/blob/dev/.github/workflows/build-ci.yml)
+
+*DrinkUp* Backend
+[CD](https://github.com/Tqs-project/DrinkUp-Backend/blob/main/.github/workflows/build-cd.yaml)
+[CI](https://github.com/Tqs-project/DrinkUp-Backend/blob/main/.github/workflows/build-ci.yml)
+
+Furthermore, the rider flutter app repository also has a CI script.
+*WeDeliver* MobileApp
+[CI](https://github.com/Tqs-project/We_Deliver-MobileApp-Rider/blob/dev/.github/workflows/build.yml)
 
 ### Code Quality <a name="quality"></a>
-[SonarCloud Dashbord]()
+In regards to static code analysis, we're using SonarCloud.
+[SonarCloud Dashbord](https://sonarcloud.io/organizations/tqs-project-1/projects)
 
 ### Production Environment <a name="prod_env"></a>
 
 
 ### Deployments <a name="deploy"></a>
-
+Our App is Continuously being deployed into the GoogleCloud Platform
 
 
 ## Repositories <a name="reps"></a>
@@ -68,7 +81,7 @@ Repo link: [here](https://github.com/Tqs-project/We_Deliver-Frontend-Rider)
 ### We_Deliver-Frontend-Admin <a name="weDel-fadmin"></a>
 Has the code for the AngularJS application of the *WeDeliver* platform for the admin.
 
-Repo link: [here](https://github.com/Tqs-project/We_Deliver-Frontend-Admin)
+Repo link: [here](https://github.com/Tqs-project/We_Deliver-MobileApp-Rider)
 
 ### DrinkUp-Backend <a name="drink-back"></a>
 Has the code for the backtend of the *DrinkUp* store: the tables' models, it's repositories, the services and controllers for the API's and the tests for each.
