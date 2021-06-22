@@ -32,10 +32,14 @@ The team has 5 elements:
 ## Project <a name="bookmarks"></a>
 
 ### Backlog <a name="backlog"></a>
-The Backlog management tool we are using is PivotalTracker (link [here](https://www.pivotaltracker.com/n/projects/2500281)) using [Pivotal Workflow](https://www.pivotaltracker.com/help/articles/workflow_overview/), passing through all the stages ("Write stories", "Prioritize stories", "Estimate stories", "Start stories", "Finish and deliver stories", "Test stories", "Accept or reject stories" and "Stories move to the Done panel").
+The Backlog management tool we are using is PivotalTracker for the [*WeDeliver* platform](https://www.pivotaltracker.com/n/projects/2500281) and for the [*DrinkUp* platform](https://www.pivotaltracker.com/n/projects/2500453) using Pivotal Workflow, passing through all the stages ("Write stories", "Prioritize stories", "Estimate stories", "Start stories", "Finish and deliver stories", "Test stories", "Accept or reject stories" and "Stories move to the Done panel").
 
 ### API <a name="api"></a>
-[Swagger](https://webmarket-314811.oa.r.appspot.com/swagger-ui/index.html?configUrl=%2Fapi-docs%2Fswagger-config#/)
+We have 2 sets of API's, one for *WeDeliver* and another for *DrinkUp*. The first one has 4 groups of API's, for the customer and riders and for the orders and admin page. *DrinkUp* has 3 groups of API's for the users, the items and the orders.
+
+[Swagger for *WeDeliver*](https://webmarket-314811.oa.r.appspot.com/swagger-ui/index.html?configUrl=%2Fapi-docs%2Fswagger-config#/)
+
+[Swagger for *DrinkUp*](http://drinkup-316817.oa.r.appspot.com/swagger-ui/index.html?configUrl=/api-docs/swagger-config)
 
 ### CI/CD <a name="ci_cd"></a>
 In order to continually test our deployments, each backend-related repositories for both WeDeliver and DrinkUp apps have CI/CD scripts executed on push.  
@@ -60,7 +64,17 @@ In regards to static code analysis, we're using SonarCloud.
 
 
 ### Deployments <a name="deploy"></a>
-Our App is Continuously being deployed into the GoogleCloud Platform
+Our App is Continuously being deployed into the GoogleCloud Platform.
+
+The *WeDeliver* admin frontend is deployed on **[https://wedeliveradmin.herokuapp.com/](https://wedeliveradmin.herokuapp.com/)** and *DrinkUp* client frontend is on **[https://drinkupstore.herokuapp.com/](https://drinkupstore.herokuapp.com/)**. Both were deployed with Heroku.
+
+The *WeDeliver* rider app has an apk on this repo.
+
+**Existing users:**
+- Clients for *DrinkUp*:
+    -  username: aux | password: aux
+-  Riders for *WeDeliver*:
+    -  username: Pedro | password: 1234
 
 
 ## Repositories <a name="reps"></a>
@@ -90,6 +104,5 @@ Repo link: [here](https://github.com/Tqs-project/DrinkUp-Backend)
 
 ### DrinkUp-Frontend <a name="drink-front"></a>
 Has the code for the frontend of the *DrinkUp* store.
-
 
 Repo link: [here](https://github.com/Tqs-project/DrinkUp-Frontend)
