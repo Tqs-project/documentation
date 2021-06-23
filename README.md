@@ -39,7 +39,7 @@ As a reference, we show how the project was developed.
 
 ### Code Quality <a name="quality"></a>
 
-#### Coding Style
+#### Coding Style <a name="code-style"></a>
 The project is mainly written in Java, Typescript and Flutter. With that in mind, it's important to have a well defined coding style nomenclature, that allows easier reading and mitigation of errors. The coding styles adopted will be shown next.
 
 1. Java code style - Android Open Source Project
@@ -51,7 +51,7 @@ The project is mainly written in Java, Typescript and Flutter. With that in mind
 4. Furthermore, the mobile flutter app was developed using the BlocPattern
     - https://pub.dev/packages/bloc_pattern
 
-#### Static Code Analysis
+#### Static Code Analysis <a name="static-code-analysis"></a>
 
 In regards to static code analysis, we're using SonarCloud.
 [SonarCloud Dashbord](https://sonarcloud.io/organizations/tqs-project-1/projects)
@@ -69,11 +69,11 @@ Quality gate on overall code.
 
 Note: The DrinkUp project had a problem with the jacoco plugin and it was not possible to resolve it in time. Has a result the project does not show coverage even though it exists.
 
-### Development Workflow
+### Development Workflow <a name="development-workflow"></a>
 
 For code development the github workflow was used. To that end, all development was committed to the dev branch. Each new feature worked had to necessarily take the code that existed in the dev branch at that time. When all development was complete, a pull request was made to the release branch. At this time the application was released with version v1.0.0. Finally a merge with main, in order to update the main branch of the repository in conformity with the released branch. 
 
-#### Naming branches
+#### Naming branches <a name="naming-branches"></a>
 
 The development and bug branches had to follow a specific nomenclature of names. This is due to the use of pivotal tracker to manage the backlog and the use of github actions for CI/CD.
 
@@ -82,7 +82,7 @@ The development and bug branches had to follow a specific nomenclature of names.
 
 Using this nomenclature it's possible for the pivotal tracker to automate the beginning and delivery processes of User stories. This way of creating branches also allows for a better framing of the branches that must be the target of integration (CI) and deployment (CD) tests, but in a moment this subject will be portrayed.
 
-#### Code review
+#### Code review <a name="code-review"></a>
 
 To submit a new feature it was necessary to create a pull request from the branch where the feature was developed for the dev branch. This pull request should be well documented. Merging with the dev branch would only take place if the new code successfully passed all CI rules. Not only that, the code should also be reviewed by at least one other project member. Being merged if all these conditions were met.
 
@@ -105,19 +105,115 @@ Build resulting of the push.
 Notice the step of Deployment to google cloud.
 
 ### CI/CD <a name="ci_cd"></a>
-In order to continually test our deployments, each backend-related repositories for both WeDeliver and DrinkUp apps have CI/CD scripts executed on push.  
 
-*WeDeliver* Backend
-[CD](https://github.com/Tqs-project/We_Deliver-Backend/blob/dev/.github/workflows/build-cd.yaml)
-[CI](https://github.com/Tqs-project/We_Deliver-Backend/blob/dev/.github/workflows/build-ci.yml)
+In order to continually test our code and our deployments, each backend and frontend related repositories have CI/CD scripts executed on new code.
 
-*DrinkUp* Backend
-[CD](https://github.com/Tqs-project/DrinkUp-Backend/blob/main/.github/workflows/build-cd.yaml)
-[CI](https://github.com/Tqs-project/DrinkUp-Backend/blob/main/.github/workflows/build-ci.yml)
+#### WeDeliver Spring-Boot Backend <a name="WeDeliver-backend"></a>
 
-Furthermore, the rider flutter app repository also has a CI script.
-*WeDeliver* MobileApp
-[CI](https://github.com/Tqs-project/We_Deliver-MobileApp-Rider/blob/dev/.github/workflows/build.yml)
+Firstly, lets check the continous integration pipeline.
+```yaml
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify -P all-tests --file webmarket/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+```
+This yaml configuration runs all the unit and integration tests and sends the statistics like code coverage to sonarcloud.
+
+---
+
+Moving on to the deployment part, this yaml configuration is used to deploy the code to google app engine service.
+```yaml
+      - name: Deploy to App Engine (Google Cloud)
+        uses: google-github-actions/deploy-appengine@v0.2.0
+        with:
+          deliverables: webmarket/app.yaml
+          project_id: ${{ secrets.GCP_PROJECT }}
+          credentials: ${{ secrets.GCP_SA_KEY }}
+          promote: false
+          version: v1
+```
+
+---
+Lastly, when there is a release, the following jmeter configuration checks the load the application can handle.
+```yaml
+on:
+  push:
+    branches:
+      - release
+...
+      - name: PerfAction for JMeter
+        uses: QAInsights/PerfAction@2.0
+
+        with:
+          test-plan-path: ./jmeterTests/Release_v1_0_0.jmx
+          args: ""
+      - name: Upload Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: jmeter-results
+          path: result.jtl
+```
+This actions retrieves an artifact that we can analyse.
+![ReleaseArtifact](./images/artifact.png)
+Note: the jmeter metrics for this project will be analysed further.
+
+This files can be found at [link](https://github.com/Tqs-project/We_Deliver-Backend/tree/main/.github/workflows).
+
+#### WeDeliver Angular Frontend <a name="WeDeliver-frontend-admin"></a>
+
+The angular application was also tested in order to verify that all components were created properly, thus avoiding future errors.
+
+```yaml
+     - name: Setup
+       run: npm ci
+
+     - name: Test
+       run: |
+         npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+```
+
+Deployment was handled by the heroku platform. This deployment was active whenever a push to the dev branch was made.
+![deployAdmin](./images/admin-deploy.png)
+
+The yaml file can be found at [link](https://github.com/Tqs-project/We_Deliver-Frontend-Admin/blob/main/.github/workflows/build_ci.yml)
+
+#### WeDeliver Rider Mobile App <a name="WeDeliver-rider-mob"></a>
+
+The mobile rider application also used a CI pipeline to verify the integrity of the code.
+
+Yaml configuration to make static code analysis to the flutter application.
+```yaml
+    - run: flutter analyze .
+      working-directory: ${{env.working-directory}}
+```
+
+Run widget tests
+```yaml
+    - run: flutter test --no-sound-null-safety
+      working-directory: ${{env.working-directory}}
+```
+
+Build apk
+```yaml
+    - run: flutter build apk --no-sound-null-safety
+      working-directory: ${{env.working-directory}}
+```
+
+This build can be found at [link](https://github.com/Tqs-project/We_Deliver-MobileApp-Rider/blob/main/.github/workflows/build.yml)
+
+
+#### DrinkUp Spring-Boot Backend <a name="DrinkUp-backend"></a>
+
+This application deserved the same care as WeDeliver with regard to CI and CD policies.
+
+The pipeline can be found at [link](https://github.com/Tqs-project/DrinkUp-Backend/tree/main/.github/workflows).
+
+#### DrinkUp Angular Frontend <a name="DrinkUp-frontend"></a>
+
+For this application it was only possible to configure deployment policies.
+
+![deployDrinkUp](./images/drinkup-deploy.png)
 
 ### API <a name="api"></a>
 We have 2 sets of API's, one for *WeDeliver* and another for *DrinkUp*. The first one has 4 groups of API's, for the customer and riders and for the orders and admin page. *DrinkUp* has 3 groups of API's for the users, the items and the orders.
