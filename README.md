@@ -93,7 +93,7 @@ A Pull Request example:
 
 As was said preveously, for the pull request to be accepted it had to go through the CI metrics, namely the static code analysis, and then it would also have to be accepted by at least one more member of the team.
 ![PullRequestSonar](./images/pull-r-comment.png)
-Where necessary, members were encouraged to leave comments to the pull request.
+When necessary, members were encouraged to leave comments to the pull request.
 
 With everything in compliance, the merge of the branch is carried out.
 ![PullRequestMerge](./images/pull-r-merged.png)
@@ -176,7 +176,7 @@ The angular application was also tested in order to verify that all components w
 Deployment was handled by the heroku platform. This deployment was active whenever a push to the dev branch was made.
 ![deployAdmin](./images/admin-deploy.png)
 
-The yaml file can be found at [link](https://github.com/Tqs-project/We_Deliver-Frontend-Admin/blob/main/.github/workflows/build_ci.yml)
+The yaml file can be found at [link](https://github.com/Tqs-project/We_Deliver-Frontend-Admin/blob/main/.github/workflows/build_ci.yml).
 
 #### WeDeliver Rider Mobile App <a name="WeDeliver-rider-mob"></a>
 
@@ -200,7 +200,7 @@ Build apk
       working-directory: ${{env.working-directory}}
 ```
 
-This build can be found at [link](https://github.com/Tqs-project/We_Deliver-MobileApp-Rider/blob/main/.github/workflows/build.yml)
+This build can be found at [link](https://github.com/Tqs-project/We_Deliver-MobileApp-Rider/blob/main/.github/workflows/build.yml).
 
 
 #### DrinkUp Spring-Boot Backend <a name="DrinkUp-backend"></a>
@@ -215,29 +215,95 @@ For this application it was only possible to configure deployment policies.
 
 ![deployDrinkUp](./images/drinkup-deploy.png)
 
-### API <a name="api"></a>
-We have 2 sets of API's, one for *WeDeliver* and another for *DrinkUp*. The first one has 4 groups of API's, for the customer and riders and for the orders and admin page. *DrinkUp* has 3 groups of API's for the users, the items and the orders.
+### Workload Test
+
+As mentioned before, there is a github workflow that, when a release is made, checks what load the application can handle. The results of this test will be presented below.
+![jmeter](./images/jmeter.png)
+
+These tests were not very encouraging as there were a lot of errors. These errors are largely due to concurrency issues with simultaneous access to the database.
+
+In the first request we tested the endpoint that allows a rider to check if it has a deliver assigned to him or not. This endpoint turned out to be quite problematic as expected because the number of requests was very high. The test was configured to have 50 requests within two seconds. Which makes a good response by the server immensely difficult.
+
+Simultaneously, an endpoint that returned information about a customer was tested again with 50 users. This endpoint had the fewest errors due to being the endpoint with the least associated logic.
+
+Finally, the server was still being overloaded with the need to create 10 orders in 2 seconds. In this case, requests with errors were around 70%.
+
+These results indicate that to support around 110 simultaneous requests for several endpoints, it would be necessary to increase not only the computational power but also to find a better solution to manage large number of requests. Perhaps in this context it would make sense to use an event queue, which would allow a more organized response to requests.
+
+### Software Testing <a name="software-testing"></a>
+
+With regard to the tests themselves, they were divided into several levels, depending also on the aspects that had to be tested. These levels are listed below.
+
+1. At the data model level, we used tests with @DataJpaTest that allow the tests of custom queries and the integrity of the data model in general
+
+2. At the service level, simple unit tests, mocking all the dependencies. This permits the verification of all the logic associated with the specific service.
+
+3. At the rest controller level, first using @WebMvcTest. This tool was used with the purpose of mocking service dependencies that allows the verification of the controller logic. This tool also permits the verification of the endpoint parsing.
+
+4. Again at the rest controller level, using @SpringBootTest and @TestPropertySource to test the endpoints with all the associated logic. The database used was also the database for production.
+
+5. Lastly, all data transfer objects and util methods were tested to mitigate unnecessary errors.
+
+#### Functional testing/acceptance <a name="functional-testing"></a>
+
+Functional testing was done using the black box methodology. This means that the functionalities must receive a certain input and its output was tested in order to verify if it corresponds to what was expected or not.
+
+#### Unit tests <a name="unit-tests"></a>
+
+Unit tests followed an open box methodology where all intrinsic logic was tested. It was important to check for example that method calls were done correctly and in the correct order. For this, mocking modules was imperial and was done whenever possible.
+
+#### System and integration testing <a name="system-integration-test"></a>
+
+For system and integration tests, the two test methodologies, open box and closed box, were used. Closed box allowed us to check inputs and outputs and open box allowed us to check the solidity of the internal logic.
+
+### Deployments <a name="deploy"></a>
+Our App was Continuously deployed into the GoogleCloud Platform and Heroku Platform.
+
+#### APIs <a name="api"></a>
+We have 2 sets of API's, one for *WeDeliver* and another for *DrinkUp*.
 
 [Swagger for *WeDeliver*](https://webmarket-314811.oa.r.appspot.com/swagger-ui/index.html?configUrl=%2Fapi-docs%2Fswagger-config#/)
 
 [Swagger for *DrinkUp*](http://drinkup-316817.oa.r.appspot.com/swagger-ui/index.html?configUrl=/api-docs/swagger-config)
 
-### Production Environment <a name="prod_env"></a>
+#### Frontend deployments
 
+The *WeDeliver* admin frontend is deployed on [https://wedeliveradmin.herokuapp.com/](https://wedeliveradmin.herokuapp.com/).
 
-### Deployments <a name="deploy"></a>
-Our App is Continuously being deployed into the GoogleCloud Platform.
-
-The *WeDeliver* admin frontend is deployed on **[https://wedeliveradmin.herokuapp.com/](https://wedeliveradmin.herokuapp.com/)** and *DrinkUp* client frontend is on **[https://drinkupstore.herokuapp.com/](https://drinkupstore.herokuapp.com/)**. Both were deployed with Heroku.
+*DrinkUp* client frontend is on [https://drinkupstore.herokuapp.com/](https://drinkupstore.herokuapp.com/).
 
 The *WeDeliver* rider app has an apk on this repo.
 
 **Existing users:**
 - Clients for *DrinkUp*:
     -  username: aux | password: aux
+    -  can create a new user without any problem
 -  Riders for *WeDeliver*:
     -  username: Pedro | password: 1234
+    -  username: Maria | password: 1234
 
+### Current WeDeliver functionalities
+
+1. Customer
+    - Create customer
+    - Make order
+    - Check order status
+    - Verify price of a delivery
+    - Login
+    - Update information about himself
+
+2. Rider
+    - Create rider
+    - Verify if order was assigned to him
+    - Accept order
+    - Decline order
+    - Deliver order
+    - Update location
+3. Admin
+    - Check waiting queue of orders
+    - Check current assignments
+    - Get orders, riders and customers information
+    - Login and Logout
 
 ## Repositories <a name="reps"></a>
 This project has two main applications: *WeDeliver* and *DrinkUp*. Each of them has a backend and a frontend. *WeDeliver* has two frontends, the riders application, which is in Flutter, and the admin application, which is in AngularJS. The *DrinkUp* frontend is also in AngularJS.
