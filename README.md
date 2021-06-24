@@ -3,17 +3,34 @@
 2. [Team Roles](#team)
 3. [Project](#bookmarks) 
     1. [Backlog](#backlog)
-    3. [API](#api)
+    2. [CodeQuality](#quality)
+        1. [CodingStyle](#code-style)
+        2. [StaticCodeAnal](#static-code-analysis)
+    3. [DeploymentWorkflow](#development-workflow)
+        1. [NamingBranches](#naming-branches)
+        2. [CodeReview](#code-review)
     4. [CI/CD](#ci_cd)
-    5. [Code Quality](#quality)
-    6. [Production Environment](#prod_env)
+        1. [WeDeliverBackend](#WeDeliver-backend)
+        2. [WeDeliverFrontend](#WeDeliver-frontend-admin)
+        3. [WeDeliverMob](#WeDeliver-rider-mob)
+        4. [DrinkUpFrontend](#DrinkUp-backend)
+        5. [DrinkUpBackend](#DrinkUp-frontend)
+    5. [WorkLoadTest](#workload-test)
+    6. [SoftwareTesting](#software-testing)
+        1. [FuncionalTesting](#functional-testing)
+        2. [UnitTests](#unit-tests)
+        3. [SystemIntTests](#system-integration-test)
     7. [Deployments](#deploy)
-4. [Repositories](#reps) 
-    1. [We_Deliver-Backend](#weDel-back)
-    2. [We_Deliver-Frontend-Rider](#weDel-frider)
-    3. [We_Deliver-Frontend-Admin](#weDel-fadmin)
-    4. [DrinkUp-Backend](#drink-back)
-    5. [DrinkUp-Frontend](#drink-front)
+        1. [APIs](#api)
+        2. [FrontendDeployments](#front-deployments)
+        3. [Users](#users)
+        4. [Functionalities](#functionalities)
+    8. [Repositories](#reps) 
+        1. [We_Deliver-Backend](#weDel-back)
+        2. [We_Deliver-Frontend-Rider](#weDel-frider)
+        3. [We_Deliver-Frontend-Admin](#weDel-fadmin)
+        4. [DrinkUp-Backend](#drink-back)
+        5. [DrinkUp-Frontend](#drink-front)
 
 ## Project Abstract <a name="introduction"></a>
 The *WeDeliver* application is a riders platform with the main objective of providing an infrastructure that allows stores to use it for the deliveries of their products.
@@ -215,7 +232,7 @@ For this application it was only possible to configure deployment policies.
 
 ![deployDrinkUp](./images/drinkup-deploy.png)
 
-### Workload Test
+### Workload Test <a name="workload-test"></a>
 
 As mentioned before, there is a github workflow that, when a release is made, checks what load the application can handle. The results of this test will be presented below.
 ![jmeter](./images/jmeter.png)
@@ -266,7 +283,7 @@ We have 2 sets of API's, one for *WeDeliver* and another for *DrinkUp*.
 
 [Swagger for *DrinkUp*](http://drinkup-316817.oa.r.appspot.com/swagger-ui/index.html?configUrl=/api-docs/swagger-config)
 
-#### Frontend deployments
+#### Frontend deployments <a name="front-deployments"></a>
 
 The *WeDeliver* admin frontend is deployed on [https://wedeliveradmin.herokuapp.com/](https://wedeliveradmin.herokuapp.com/).
 
@@ -274,7 +291,7 @@ The *WeDeliver* admin frontend is deployed on [https://wedeliveradmin.herokuapp.
 
 The *WeDeliver* rider app has an apk on this repo.
 
-**Existing users:**
+#### Existing users <a name="users"></a>
 - Clients for *DrinkUp*:
     -  username: aux | password: aux
     -  can create a new user without any problem
@@ -282,7 +299,7 @@ The *WeDeliver* rider app has an apk on this repo.
     -  username: Pedro | password: 1234
     -  username: Maria | password: 1234
 
-### Current WeDeliver functionalities
+### Current WeDeliver functionalities <a name="functionalities"></a>
 
 1. Customer
     - Create customer
